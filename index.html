@@ -1,5 +1,6 @@
 <!doctype html>
 <html lang="hr">
+  <div id="sheetData"></div>
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
@@ -241,5 +242,33 @@ refreshAll();
 setInterval(refreshAll, REFRESH_INTERVAL_MS);
 
 </script>
+  <script>
+async function loadSheet() {
+    const url = "https://docs.google.com/spreadsheets/d/1rD6wKaivqevoBNAuqvRzmS9YHORqeItGFjKOKrXDJLU/export?format=csv";
+
+    const response = await fetch(url);
+    const csv = await response.text();
+
+    const rows = csv.split("\n").map(r => r.split(","));
+
+    let html = "<table border='1' style='border-collapse: collapse; margin-top:20px;'>";
+
+    rows.forEach(row => {
+        html += "<tr>";
+        row.forEach(cell => {
+            html += `<td style='padding:4px;'>${cell}</td>`;
+        });
+        html += "</tr>";
+    });
+
+    html += "</table>";
+
+    document.getElementById("sheetData").innerHTML = html;
+}
+
+loadSheet();
+</script>
+
 </body>
 </html>
+
